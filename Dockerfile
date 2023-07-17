@@ -20,15 +20,17 @@ RUN R -e "install.packages(c('feather', 'anndata', 'dichromat', 'dplyr', 'scatte
 RUN echo break cache1
 
 
+ADD . /app
+
+WORKDIR /app
+
+
 
 # make sure all packages are installed
 # because R does not fail when there's an error installing a package.
 RUN R --vanilla -f check.R --args feather anndata dichromat dplyr scattermore DT ggplot2 ggpubr shiny shinycssloaders shinydashboard shinyWidgets reticulate tibble viridis hrbrthemes sccore RColorBrewer pals
 
 
-ADD . /app
-
-WORKDIR /app
 
 
 CMD R --vanilla -f app.R
