@@ -8,6 +8,8 @@ RUN apt-get --allow-releaseinfo-change update -y
 
 RUN apt-get install -y curl python3-pip libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libcairo2-dev cmake
 
+# workaround: https://stackoverflow.com/a/72469586/470769
+RUN pip install pip==21.3.1
 
 RUN pip install --break-system-packages scanpy awscli
 
