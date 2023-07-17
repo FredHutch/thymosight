@@ -6,10 +6,10 @@ ARG AWS_DEFAULT_REGION
 
 RUN apt-get --allow-releaseinfo-change update -y
 
-RUN apt-get install -y curl unzip python3-pip libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
+RUN apt-get install -y curl python3-pip libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
 
 
-RUN pip install scanpy
+RUN pip install --break-system-packages scanpy
 
 EXPOSE 3838
 
