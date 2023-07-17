@@ -6,7 +6,7 @@ ARG AWS_DEFAULT_REGION
 
 RUN apt-get --allow-releaseinfo-change update -y
 
-RUN apt-get install -y curl python3-pip libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libcairo2-dev
+RUN apt-get install -y curl python3-pip libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libcairo2-dev cmake
 
 
 RUN pip install --break-system-packages scanpy
