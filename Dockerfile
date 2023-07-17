@@ -9,7 +9,6 @@ RUN apt-get --allow-releaseinfo-change update -y
 RUN apt-get install -y curl unzip python3-pip libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
 
 
-RUN python3 -m ensurepip
 RUN pip install scanpy
 
 EXPOSE 3838
