@@ -13,7 +13,8 @@ RUN pip install --break-system-packages scanpy
 
 EXPOSE 3838
 
-
+# TODO remove this:
+RUN echo break cache
 
 RUN R -e "install.packages(c('feather', 'anndata', 'dichromat', 'dplyr', 'scattermore', 'DT', 'ggplot2', 'ggpubr', 'shiny', 'shinycssloaders', 'shinydashboard', 'shinyWidgets', 'reticulate', 'tibble', 'viridis', 'hrbrthemes', 'sccore', 'RColorBrewer', 'pals'), repos='https://cran.rstudio.com/')"
 
@@ -28,5 +29,5 @@ ADD . /app
 WORKDIR /app
 
 
-CMD R -f app.R
+CMD R --vanilla -f app.R
 
