@@ -38,7 +38,7 @@ RUN R --vanilla -q -e 'print(.libPaths())'
 
 
 
-RUN R --vanilla -e "install.packages(c('feather', 'anndata', 'dichromat', 'dplyr', 'scattermore', 'DT', 'ggplot2', 'ggpubr', 'shiny', 'shinycssloaders', 'shinydashboard', 'shinyWidgets', 'reticulate', 'tibble', 'viridis', 'hrbrthemes', 'sccore', 'RColorBrewer', 'pals'), repos='https://cran.rstudio.com/')"
+RUN R --vanilla -e "install.packages(c('readxl', 'arrow', 'feather', 'anndata', 'dichromat', 'dplyr', 'scattermore', 'DT', 'ggplot2', 'ggpubr', 'shiny', 'shinycssloaders', 'shinydashboard', 'shinyWidgets', 'reticulate', 'tibble', 'viridis', 'hrbrthemes', 'sccore', 'RColorBrewer', 'pals'), repos='https://cran.rstudio.com/')"
 
 
 ADD . /app
@@ -49,7 +49,7 @@ WORKDIR /app
 
 # make sure all packages are installed
 # because R does not fail when there's an error installing a package.
-RUN R --vanilla -f check.R --args feather anndata dichromat dplyr scattermore DT ggplot2 ggpubr shiny shinycssloaders shinydashboard shinyWidgets reticulate tibble viridis hrbrthemes sccore RColorBrewer pals
+RUN R --vanilla -f check.R --args readxl arrow feather anndata dichromat dplyr scattermore DT ggplot2 ggpubr shiny shinycssloaders shinydashboard shinyWidgets reticulate tibble viridis hrbrthemes sccore RColorBrewer pals
 
 # get data
 RUN mkdir data
