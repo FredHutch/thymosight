@@ -6,14 +6,25 @@ ARG AWS_DEFAULT_REGION
 
 RUN apt-get --allow-releaseinfo-change update -y
 
-RUN apt-get install -y curl python3-pip libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libcairo2-dev cmake
+RUN apt-get install -y curl libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libcairo2-dev cmake build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libbz2-dev
 
-RUN pip install --break-system-packages scanpy
+RUN curl -LO https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz
+RUN tar -xf Python-3.9.1.tgz
+RUN rm Python-3.9.1.tgz
 
-# workaround: https://stackoverflow.com/a/72469586/470769
-RUN pip install --break-system-packages pip==21.3.1
+WORKDIR  Python-3.9.1
 
-RUN pip install awscli
+RUN ./configure --enable-optimizations --enable-shared
+
+RUN make -j `nproc`
+
+RUN make altinstall
+
+RUN python3.9 -m ensurepip
+
+RUN python3.9 -m pip install scanpy awscli
+
+RUN rm -rf /tmp/Python-3.9.1
 
 EXPOSE 3838
 
@@ -30,6 +41,8 @@ RUN R --vanilla -e "install.packages(c('feather', 'anndata', 'dichromat', 'dplyr
 ADD . /app
 
 WORKDIR /app
+
+
 
 # make sure all packages are installed
 # because R does not fail when there's an error installing a package.
