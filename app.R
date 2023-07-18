@@ -48,7 +48,7 @@ colnames(adata_TOTAL_meta) <- c("tissue", "sorted_cell", "cell_type_subset", "st
 public_signatures <- readxl::read_excel("data/public_signatures.xlsx", sheet='Sheet2')
 public_signatures_metadata <- readxl::read_excel("data/public_signatures.xlsx", sheet='Sheet3')
 
-if (!requireNamespace("remotes", quietly = TRUE)) {install.packages("remotes")}
+# if (!requireNamespace("remotes", quietly = TRUE)) {install.packages("remotes")}
 
 # Shiny app: ui component
 ui <- dashboardPage(skin="black",
