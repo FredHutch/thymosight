@@ -57,6 +57,7 @@ addResourcePath("/assets", file.path(getwd(), "www"))
 ui <- dashboardPage(skin="black",
         dashboardHeader(title=tags$div(tags$h3(HTML(paste(tags$span(style="color: #222d32 ", "Thymo"), tags$span(style="color: #FF465D", "Sight"), sep = ""))))),
         dashboardSidebar(
+          tags$script('document.title = "ThymoSight";', language="javascript"),
           sidebarMenu(
             menuItem("The thymus gland", tabName = "theThymusGland", badgeLabel = "OVERVIEW", badgeColor = "black"),
             menuItem("Database", tabName = "database",  selected = TRUE, icon=icon("database")),# ),
