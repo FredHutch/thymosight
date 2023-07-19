@@ -50,6 +50,9 @@ public_signatures_metadata <- readxl::read_excel("data/public_signatures.xlsx", 
 
 # if (!requireNamespace("remotes", quietly = TRUE)) {install.packages("remotes")}
 
+
+addResourcePath("/assets", file.path(getwd(), "www"))
+
 # Shiny app: ui component
 ui <- dashboardPage(skin="black",
         dashboardHeader(title=tags$div(tags$h3(HTML(paste(tags$span(style="color: #222d32 ", "Thymo"), tags$span(style="color: #FF465D", "Sight"), sep = ""))))),
@@ -58,15 +61,15 @@ ui <- dashboardPage(skin="black",
             menuItem("The thymus gland", tabName = "theThymusGland", badgeLabel = "OVERVIEW", badgeColor = "black"),
             menuItem("Database", tabName = "database",  selected = TRUE, icon=icon("database")),# ),
             menuItem("Data browser", tabName = "dataBrowser", icon=icon("coffee")))),
-        dashboardBody(tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")),
+        dashboardBody(tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "/assets/custom.css")),
           tabItems(
             tabItem(tabName="theThymusGland",	titlePanel("Overview and graphical abstract"),
               fluidPage(
                 fluidRow(column(11, h2(""), tags$div(class="header", checked=NA, align="justify", tags$p("A diverse T cell repertoire is an important branch of adaptive immunity which is required to adequately mount response to pathogens, maintain immunosurveillance of cancer, and tissue health. T cell development is orchestrated in the thymus. Thymic functionality and, thus, thymopoiesis declines in a process termed age-related involution. Thymic output can also be transiently impaired due to acute injury. Yet, the thymus has a remarkable capacity for endogenous repair. Here we interrogated on a single-cell level the complex stromal network of thymic epithelial, endothelial and mesenchymal cells providing the microenvironment for T cell development. We encountered a previously underappreciated heterogeneity in cellular subpopulations. Aging induced compositional changes in the thymic stroma, including the emergence of new subpopulations. We demonstrate that epithelium, endothelium, and mesenchyme are differently impacted by hallmarks of aging. Age-dependent stromal compositional and subset-specific transcriptional changes contributed to attenuated regenerative response with aging. This data set will serve as a resource that can shed light on the involuted thymus status quo and how aging impacts organ function and tissue regeneration.", style = "font-size:13pt")))),
                 tags$br(),
                 fluidRow(column(1),
-                  column(5, tags$img(src = "mouse-thymus-sketch.jpg", width = "350px")),
-                  column(5, tags$img(src = "human-thymus-sketch.jpg", width = "400px"))))),
+                  column(5, tags$img(src = "/assets/mouse-thymus-sketch.jpg", width = "350px")),
+                  column(5, tags$img(src = "/assets/human-thymus-sketch.jpg", width = "400px"))))),
             tabItem(tabName="database",	titlePanel("Thymus single cell database"),
               fluidPage(
                 tags$style("@import url(https://use.fontawesome.com/releases/v6.2.0/css/all.css);"),
