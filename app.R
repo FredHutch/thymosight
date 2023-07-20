@@ -32,6 +32,9 @@ require(pals)
 if (Sys.info()["sysname"] == "Linux" && !interactive()) {
   Sys.setenv(RETICULATE_PYTHON="/usr/local/bin/python3.9")
   use_python("/usr/local/bin/python3.9")  
+} else {
+  Sys.setenv(RETICULATE_PYTHON=".venv/bin/python")
+
 }
 sc <- import("scanpy")
 
