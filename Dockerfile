@@ -32,7 +32,7 @@ ADD . /app
 WORKDIR /app
 
 
-RUN python3.8 -m pip install -e python-requirements.txt
+RUN python3.8 -m pip install -r python-requirements.txt
 
 RUN rm -rf /tmp/Python-3.8.8
 
