@@ -26,6 +26,12 @@ RUN python3.8 -m ensurepip
 
 # RUN python3.8 -m pip install scanpy awscli
 # RUN python3.8 -m pip install numpy==1.24
+
+ADD . /app
+
+WORKDIR /app
+
+
 RUN python3.8 -m pip install -e python-requirements.txt
 
 RUN rm -rf /tmp/Python-3.8.8
@@ -42,9 +48,6 @@ RUN R --vanilla -q -e 'print(.libPaths())'
 RUN R --vanilla -e "install.packages(c('readxl', 'arrow', 'feather', 'anndata', 'dichromat', 'dplyr', 'scattermore', 'DT', 'ggplot2', 'ggpubr', 'shiny', 'shinycssloaders', 'shinydashboard', 'shinyWidgets', 'reticulate', 'tibble', 'viridis', 'hrbrthemes', 'sccore', 'RColorBrewer', 'pals'), repos='https://cran.rstudio.com/')"
 
 
-ADD . /app
-
-WORKDIR /app
 
 
 
