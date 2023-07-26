@@ -1,4 +1,4 @@
-FROM fredhutch/r-shiny-base:4.3.1
+FROM fredhutch/r-shiny-base:4.2.2
 
 ARG AWS_ACCESS_KEY_ID
 ARG AWS_SECRET_ACCESS_KEY
@@ -10,11 +10,11 @@ RUN apt-get --allow-releaseinfo-change update -y
 
 RUN apt-get install -y curl libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libcairo2-dev cmake build-essential zlib1g-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libbz2-dev
 
-RUN curl -LO https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz
-RUN tar -xf Python-3.9.1.tgz
-RUN rm Python-3.9.1.tgz
+RUN curl -LO https://www.python.org/ftp/python/3.8.8/Python-3.8.8.tgz
+RUN tar -xf Python-3.8.8.tgz
+RUN rm Python-3.8.8.tgz
 
-WORKDIR  Python-3.9.1
+WORKDIR  Python-3.8.8
 
 RUN ./configure --enable-optimizations --enable-shared
 
@@ -22,12 +22,13 @@ RUN make -j `nproc`
 
 RUN make altinstall
 
-RUN python3.9 -m ensurepip
+RUN python3.8 -m ensurepip
 
-RUN python3.9 -m pip install scanpy awscli
-RUN python3.9 -m pip install numpy==1.24
+# RUN python3.8 -m pip install scanpy awscli
+# RUN python3.8 -m pip install numpy==1.24
+RUN python3.8 -m pip install -e python-requirements.txt
 
-RUN rm -rf /tmp/Python-3.9.1
+RUN rm -rf /tmp/Python-3.8.8
 
 EXPOSE 3838
 
