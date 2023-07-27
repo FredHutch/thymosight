@@ -165,7 +165,7 @@ ui <- dashboardPage(skin="black",
 
 # Shiny app: server component
 server <- function(input, output, session) {
-  options(shiny.maxRequestSize=30*1024^2)
+  # options(shiny.maxRequestSize=30*1024^2)
   adata_TOTAL_obs_tmp = adata_TOTAL_meta
   
   output$tbl_db = renderDT(
