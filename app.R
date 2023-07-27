@@ -28,6 +28,7 @@ library(sccore)
 library(RColorBrewer)
 require(pals)
 
+hrbrthemes::import_roboto_condensed()
 
 if (Sys.info()["sysname"] == "Linux" && !interactive()) {
   Sys.setenv(RETICULATE_PYTHON="/usr/local/bin/python3.8")

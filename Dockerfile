@@ -48,6 +48,19 @@ RUN R --vanilla -q -e 'print(.libPaths())'
 RUN R --vanilla -e "install.packages(c('readxl', 'arrow', 'feather', 'anndata', 'dichromat', 'dplyr', 'scattermore', 'DT', 'ggplot2', 'ggpubr', 'shiny', 'shinycssloaders', 'shinydashboard', 'shinyWidgets', 'reticulate', 'tibble', 'viridis', 'hrbrthemes', 'sccore', 'RColorBrewer', 'pals'), repos='https://cran.rstudio.com/')"
 
 
+# downgrade a few pkgs
+RUN curl -LO https://cran.r-project.org/src/contrib/Archive/ggpubr/ggpubr_0.4.0.tar.gz
+RUN curl -LO https://cran.r-project.org/src/contrib/Archive/shiny/shiny_1.7.3.tar.gz
+RUN curl -LO https://cran.r-project.org/src/contrib/Archive/ggplot2/ggplot2_3.4.0.tar.gz
+RUN curl -LO https://cran.r-project.org/src/contrib/Archive/scattermore/scattermore_0.8.tar.gz
+
+RUN R CMD INSTALL ggpubr_0.4.0.tar.gz
+RUN R CMD INSTALL shiny_1.7.3.tar.gz
+RUN R CMD INSTALL ggplot2_3.4.0.tar.gz
+RUN R CMD INSTALL scattermore_0.8.tar.gz
+
+RUN rm *.tar.gz
+
 
 
 
