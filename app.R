@@ -242,7 +242,7 @@ server <- function(input, output, session) {
       if (input$annotation == 'metadata'){
         output$umap <- renderPlot({
           ggplot(as.data.frame(adata[rownames(tbl_br_filtered())]$obsm$X_umap), aes(x = adata[rownames(tbl_br_filtered())]$obsm$X_umap[,1], y = adata[rownames(tbl_br_filtered())]$obsm$X_umap[,2], colour = adata[rownames(tbl_br_filtered())]$obs[[input$groupingInput]])) +
-            geom_scattermore(pointsize = input$cellSize) + theme_pubr() + xlab("UMAP1") + ylab("UMAP2") + theme(legend.position = "right", legend.title = element_text(size = 17), legend.text = element_text(size = 15)) +
+            geom_scattermore(pointsize = as.integer(input$cellSize)[[1]]) + theme_pubr() + xlab("UMAP1") + ylab("UMAP2") + theme(legend.position = "right", legend.title = element_text(size = 17), legend.text = element_text(size = 15)) +
             scale_color_manual("", values = as.vector(polychrome(n=36)))
         })
       }
@@ -250,14 +250,14 @@ server <- function(input, output, session) {
         output$umap <- renderPlot({
           if (is.null(input$geneInput)) return()
           ggplot(as.data.frame(adata[rownames(tbl_br_filtered())]$obsm$X_umap), aes(x = adata[rownames(tbl_br_filtered())]$obsm$X_umap[,1], y = adata[rownames(tbl_br_filtered())]$obsm$X_umap[,2], colour = adata[rownames(tbl_br_filtered())]$X[, input$geneInput])) + 
-            geom_scattermore(pointsize = input$cellSize) + theme_classic2() + scale_color_gradientn("", colours = rev(brewer.pal(11, "Spectral"))) + xlab("UMAP1") + ylab("UMAP2")
+            geom_scattermore(pointsize = as.integer(input$cellSize)[[1]]) + theme_classic2() + scale_color_gradientn("", colours = rev(brewer.pal(11, "Spectral"))) + xlab("UMAP1") + ylab("UMAP2")
         })
       }
       else if (input$annotation == 'signature'){
         sc$tl$score_genes(adata, public_signatures[[input$signature]][!is.na(public_signatures[[input$signature]])], score_name=input$signature, use_raw=F)
         output$umap <- renderPlot({
           ggplot(as.data.frame(adata[rownames(tbl_br_filtered())]$obsm$X_umap), aes(x = adata[rownames(tbl_br_filtered())]$obsm$X_umap[,1], y = adata[rownames(tbl_br_filtered())]$obsm$X_umap[,2], colour = adata[rownames(tbl_br_filtered())]$obs[[input$signature]])) + 
-            geom_scattermore(pointsize = input$cellSize) + theme_classic2() + scale_color_gradientn("", colours = rev(brewer.pal(11, "Spectral"))) + xlab("UMAP1") + ylab("UMAP2")
+            geom_scattermore(pointsize = as.integer(input$cellSize)[[1]]) + theme_classic2() + scale_color_gradientn("", colours = rev(brewer.pal(11, "Spectral"))) + xlab("UMAP1") + ylab("UMAP2")
         })
       }
       

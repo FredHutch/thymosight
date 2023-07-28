@@ -44,29 +44,15 @@ RUN echo break cache2
 RUN R --vanilla -q -e 'print(.libPaths())'
 
 
+# RUN R --vanilla -e "install.packages('renv', repos='https://cran.rstudio.com/')"
 
-RUN R --vanilla -e "install.packages(c('readxl', 'arrow', 'feather', 'anndata', 'dichromat', 'dplyr', 'scattermore', 'DT', 'ggplot2', 'ggpubr', 'shiny', 'shinycssloaders', 'shinydashboard', 'shinyWidgets', 'reticulate', 'tibble', 'viridis', 'hrbrthemes', 'sccore', 'RColorBrewer', 'pals'), repos='https://cran.rstudio.com/')"
+# RUN R --vanilla -e "install.packages(c('readxl', 'arrow', 'feather', 'anndata', 'dichromat', 'dplyr', 'scattermore', 'DT', 'ggplot2', 'ggpubr', 'shiny', 'shinycssloaders', 'shinydashboard', 'shinyWidgets', 'reticulate', 'tibble', 'viridis', 'hrbrthemes', 'sccore', 'RColorBrewer', 'pals'), repos='https://cran.rstudio.com/')"
 
-
-# downgrade a few pkgs
-RUN curl -LO https://cran.r-project.org/src/contrib/Archive/ggpubr/ggpubr_0.4.0.tar.gz
-RUN curl -LO https://cran.r-project.org/src/contrib/Archive/shiny/shiny_1.7.3.tar.gz
-RUN curl -LO https://cran.r-project.org/src/contrib/Archive/ggplot2/ggplot2_3.4.0.tar.gz
-RUN curl -LO https://cran.r-project.org/src/contrib/Archive/scattermore/scattermore_0.8.tar.gz
-
-RUN R CMD INSTALL ggpubr_0.4.0.tar.gz
-RUN R CMD INSTALL shiny_1.7.3.tar.gz
-RUN R CMD INSTALL ggplot2_3.4.0.tar.gz
-RUN R CMD INSTALL scattermore_0.8.tar.gz
-
-RUN rm *.tar.gz
-
-
-
+RUN R --vanilla -e "renv::install('readxl@1.4.0', 'arrow@12.0.1', 'feather@0.3.5', 'anndata@0.7.5.3', 'dichromat@2.0-0.1', 'dplyr@1.0.10', 'scattermore@0.8', 'DT@0.26', 'ggplot2@3.4.0', 'ggpubr@0.4.0', 'shiny@1.7.3', 'shinycssloaders@1.0.0', 'shinydashboard@0.7.2', 'shinyWidgets@0.7.4', 'reticulate@1.26', 'tibble@3.1.8', 'viridis@0.6.2', 'hrbrthemes@0.8.0', 'sccore@1.0.2', 'RColorBrewer@1.1-3', 'pals@1.7', library=.libPaths())"
 
 # make sure all packages are installed
 # because R does not fail when there's an error installing a package.
-RUN R --vanilla -f check.R --args readxl arrow feather anndata dichromat dplyr scattermore DT ggplot2 ggpubr shiny shinycssloaders shinydashboard shinyWidgets reticulate tibble viridis hrbrthemes sccore RColorBrewer pals
+RUN R --vanilla -f check.R --args renv readxl arrow feather anndata dichromat dplyr scattermore DT ggplot2 ggpubr shiny shinycssloaders shinydashboard shinyWidgets reticulate tibble viridis hrbrthemes sccore RColorBrewer pals
 
 # get data
 RUN mkdir data
