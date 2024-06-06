@@ -1,4 +1,4 @@
-FROM fredhutch/r-shiny-base:4.2.2
+FROM fredhutch/r-shiny-base:4.4.0
 
 ARG AWS_ACCESS_KEY_ID
 ARG AWS_SECRET_ACCESS_KEY
