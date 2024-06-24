@@ -1,3 +1,4 @@
+#renv::init()
 #renv::status()
 #renv::snapshot()
 #renv::restore()
@@ -43,17 +44,15 @@ setAs("dgRMatrix", to = "dgCMatrix", function(from){
   as(as(from, "CsparseMatrix"), "dgCMatrix")
 })
 
-adata_TOTAL_meta <- arrow::read_feather('data/thymus CD45- TOTAL meta.txt')
-adata_TOTAL_meta_tr <- t(adata_TOTAL_meta[,1:length(adata_TOTAL_meta)-1])
-adata_TOTAL_meta <- as.data.frame(adata_TOTAL_meta_tr)
-colnames(adata_TOTAL_meta) <- c("tissue", "sorted_cell", "cell_type_subset", "stage", "age", "gender", "genotype", "strain", "treatment", "DOI", "dataset")
+user_defined_palette =  c('#3283FE', '#16FF32', '#F6222E',  '#FEAF16', '#BDCDFF', '#3B00FB', '#1CFFCE', '#C075A6', '#F8A19F', '#B5EFB5', '#FBE426', '#C4451C', '#2ED9FF', '#c1c119', '#8b0000', '#FE00FA', '#1CBE4F', '#1C8356', '#0e452b', '#AA0DFE', '#B5EFB5', '#325A9B', '#90AD1C')
+thymosight_cd45neg_TOTAL_mouse <- anndata::read_h5ad(paste0('data/mouse/thymosight_cd45neg_TOTAL_mouse.h5ad'))
 
+thymosight_cd45neg_TOTAL_human <- anndata::read_h5ad(paste0('data/human/thymosight_cd45neg_TOTAL_human.h5ad'))
 
 public_signatures <- readxl::read_excel("data/public_signatures.xlsx", sheet='Sheet2')
 public_signatures_metadata <- readxl::read_excel("data/public_signatures.xlsx", sheet='Sheet3')
 
 # if (!requireNamespace("remotes", quietly = TRUE)) {install.packages("remotes")}
-
 
 addResourcePath("/assets", file.path(getwd(), "www"))
 
@@ -63,157 +62,302 @@ ui <- dashboardPage(skin="black",
         dashboardSidebar(
           tags$script('document.title = "ThymoSight";', language="javascript"),
           sidebarMenu(
-            menuItem("The thymus gland", tabName = "theThymusGland", badgeLabel = "OVERVIEW", badgeColor = "black"),
-            menuItem("Database", tabName = "database",  selected = TRUE, icon=icon("database")),# ),
-            menuItem("Data browser", tabName = "dataBrowser", icon=icon("coffee")))),
+            menuItem("The thymus gland", tabName = "theThymusGland"),
+            menuItem(" ThymoSight", tabName = "database", badgeLabel = "AN OVERVIEW", badgeColor = "black", selected = TRUE, icon=icon("database")),# ),
+            menuItem("Explore the data", tabName = "dataBrowser", icon=icon("coffee")))),
         dashboardBody(tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "/assets/custom.css")),
           tabItems(
-            tabItem(tabName="theThymusGland",	titlePanel("Overview and graphical abstract"),
+            tabItem(tabName="theThymusGland",	titlePanel("Summary"),
               fluidPage(
-                fluidRow(column(11, h2(""), tags$div(class="header", checked=NA, align="justify", tags$p("A diverse T cell repertoire is an important branch of adaptive immunity which is required to adequately mount response to pathogens, maintain immunosurveillance of cancer, and tissue health. T cell development is orchestrated in the thymus. Thymic functionality and, thus, thymopoiesis declines in a process termed age-related involution. Thymic output can also be transiently impaired due to acute injury. Yet, the thymus has a remarkable capacity for endogenous repair. Here we interrogated on a single-cell level the complex stromal network of thymic epithelial, endothelial and mesenchymal cells providing the microenvironment for T cell development. We encountered a previously underappreciated heterogeneity in cellular subpopulations. Aging induced compositional changes in the thymic stroma, including the emergence of new subpopulations. We demonstrate that epithelium, endothelium, and mesenchyme are differently impacted by hallmarks of aging. Age-dependent stromal compositional and subset-specific transcriptional changes contributed to attenuated regenerative response with aging. This data set will serve as a resource that can shed light on the involuted thymus status quo and how aging impacts organ function and tissue regeneration.", style = "font-size:13pt")))),
+                fluidRow(column(11, h2(""), tags$div(class="header", checked=NA, align="justify", tags$p("The thymus is essential for establishing adaptive immunity yet undergoes age-related involution that leads to compromised immune responsiveness. The thymus is also extremely sensitive to acute insult and although capable of regeneration, this capacity declines with age for unknown reasons. We applied single-cell and spatial transcriptomics, lineage-tracing and advanced imaging to define age-related changes in non-hematopoietic stromal cells and discovered the emergence of two atypical thymic epithelial cell (TEC) states. These age-associated (aa)TECs formed high-density peri-medullary epithelial clusters that were devoid of thymocytes; an accretion of non-productive thymic tissue that worsened with age, exhibited features of epithelial-to-mesenchymal transition (EMT), and was associated with downregulation of FOXN1. Interaction analysis revealed that the emergence of aaTEC drew tonic signals from other functional TEC populations at baseline acting as a sink for TEC growth factors. Following acute injury, aaTEC expanded substantially, further perturbing trophic regeneration pathways and correlating with defective repair of the involuted thymus. These findings therefore define a unique feature of thymic involution linked to immune aging and could have implications for developing immune boosting therapies in older individuals.", style = "font-size:13pt")))),
                 tags$br(),
                 fluidRow(column(1),
                   column(5, tags$img(src = "/assets/mouse-thymus-sketch.jpg", width = "350px")),
                   column(5, tags$img(src = "/assets/human-thymus-sketch.jpg", width = "400px"))))),
-            tabItem(tabName="database",	titlePanel("Thymus single cell database"),
+            tabItem(tabName="database",	titlePanel("Single cell sequencing dataset collection of the mouse and human thymus"),
               fluidPage(
                 tags$style("@import url(https://use.fontawesome.com/releases/v6.2.0/css/all.css);"),
                 tags$style('.container-fluid { background-color: #FFFFFF;}'),
                 tags$style(".small-box.bg-light-blue { background-color: #ff616d !important; color: #FFFFFF !important;}"),
                 tags$br(),
-                fluidRow(
-                  valueBoxOutput("nsubsetsBox",  width = 2),
-                  valueBoxOutput("nagesBox",  width = 2),
-                  valueBoxOutput("ngenotypeBox",  width = 2),
-                  valueBoxOutput("nstrainBox",  width = 2),
-                  valueBoxOutput("ntreatmentBox", width = 2),
-                  valueBoxOutput("ncellsBox",  width = 2)),
-                tags$hr(),
                 tags$br(),
                 fluidPage(
-                      fluidRow(column(12, 
-                        tags$style("@import url(https://use.fontawesome.com/releases/v6.2.0/css/all.css);"),
+                  fluidRow(
+                    column(5, h3("ThymoSight all mouse", align='center'), tags$img(src = "/assets/thymosight_cd45neg_TOTAL_mouse_publication.png", width = "450px")),
+                    column(1),
+                    column(5,  h3("ThymoSight all human",  align='center'), tags$img(src = "/assets/thymosight_cd45neg_TOTAL_human_publication.png", width = "450px"))),
+                  fluidRow(column(11, h2(""), tags$div(class="header", checked=NA, align="justify", tags$p("For a detailed description of the publicly available single cell sequencing datasets included in ThymoSight go to www.thymosight.github.com. For the data preprocessing steps and integration analyis see the Jupyter notebook here.", style = "font-size:11pt")))),
+                  tags$br(),
+                  tags$br(),
+                  
+                  # tabset panel for MOUSE metadata
+                  tabsetPanel(
+                    tabPanel("Mouse",
+                      tags$br(),
+                      valueBoxOutput("nsubsetsBox-mouse",  width = 2),
+                      valueBoxOutput("nagesBox-mouse",  width = 2),
+                      valueBoxOutput("ngenotypeBox-mouse",  width = 2),
+                      valueBoxOutput("nsortedcellBox-mouse",  width = 2),
+                      valueBoxOutput("ntreatmentBox-mouse", width = 2),
+                      valueBoxOutput("ncellsBox-mouse",  width = 2),
+                      fluidRow(column(12, tags$style("@import url(https://use.fontawesome.com/releases/v6.2.0/css/all.css);"),
                         dropdownButton(
-                          selectInput(inputId = 'varColor',
-                                      label = '',
-                                      choices = colnames(adata_TOTAL_meta),
-                                      selected = 'publication'),
-                          circle = TRUE, status = "danger",
-                          icon = icon("paint-roller"),width = "250px",
-                          tooltip = tooltipOptions(title = "Click to change coloured variable [subset, age, treatment, genotype...]")
-                        ),
-                        tags$br(),
-                        plotOutput("barplot"))),
-                      fluidRow(column(5), 
+                          selectInput(inputId = 'barplot-c-mouse',
+                                      label = 'Annotate by',
+                                      choices = colnames(thymosight_cd45neg_TOTAL_mouse$obs),
+                                      selected = 'dataset'),
+                                      circle = FALSE, status = "danger",
+                                      icon = icon("paint-roller"),width = "250px",
+                                      tooltip = tooltipOptions(title = "Click to change coloured variable [subset, age, treatment, genotype...]")
+                          )
+                        )
+                      ),
+                      
+                      fluidRow(
+                        column(12, h3("Number of single cells per selected annotation (x-axis)", align='center'), 
+                          plotOutput("barplot-mouse"))),
+                      
+                      fluidRow(
+                        column(5), 
                         column(2,
-                          pickerInput(inputId = 'xaxis',
+                          pickerInput(inputId = 'barplot-x-mouse',
+                                      label = '',
+                                      choices = colnames(thymosight_cd45neg_TOTAL_mouse$obs),
+                                      selected = 'cell_type_subset',
+                                      options = list(`style` = "btn-danger")))
+                      ),
+                      tags$hr(),
+                      tags$br(),
+                      fluidRow(
+                        column(12, h3("Overview table with per cell annotation", align='center'), 
+                          DTOutput('tbl_db_mouse'))
+                        )
+                    ),
+                    
+                    # tabset panel for HUMAN metadata
+                    tabPanel("Human",tags$br(),
+                      valueBoxOutput("nsubsetsBox-human",  width = 2),
+                      valueBoxOutput("nagesBox-human",  width = 2),
+                      valueBoxOutput("ngenotypeBox-human",  width = 2),
+                      valueBoxOutput("nsortedcellBox-human",  width = 2),
+                      valueBoxOutput("ntreatmentBox-human", width = 2),
+                      valueBoxOutput("ncellsBox-human",  width = 2),
+                      fluidRow(
+                        column(12,  
+                          tags$style("@import url(https://use.fontawesome.com/releases/v6.2.0/css/all.css);"),
+                          dropdownButton(
+                            selectInput(inputId = 'barplot-c-human',
+                                        label = 'Annotate by',
+                                        choices = colnames(thymosight_cd45neg_TOTAL_human$obs),
+                                        selected = 'dataset'),
+                                        circle = FALSE, status = "danger",
+                                        icon = icon("paint-roller"),width = "250px",
+                                        tooltip = tooltipOptions(title = "Click to change coloured variable [subset, age, treatment, genotype...]")
+                          )
+                        )
+                      ),
+                      fluidRow(
+                        column(12, h3("Number of single cells per selected annotation (x-axis)", align='center'), 
+                          plotOutput("barplot-human"))),
+                      fluidRow(
+                        column(5), 
+                        column(2,
+                          pickerInput(inputId = 'barplot-x-human',
                             label = '',
-                            choices = colnames(adata_TOTAL_meta),
+                            choices = colnames(thymosight_cd45neg_TOTAL_human$obs),
                             selected = 'cell_type_subset',
                             options = list(`style` = "btn-danger")))
                       ),
-                  ),
-                  tags$hr(),
-                  tags$br(),
-                  fluidRow(DTOutput('tbl_db')))
-            ),         
-            tabItem(tabName="dataBrowser",	titlePanel("Explore the single cell thymus atlas"),
+                      tags$hr(),
+                      tags$br(),
+                      fluidRow(
+                        column(12, h3("Overview table with per cell annotation", align='center'), 
+                          DTOutput('tbl_db_human'))))
+                  )
+                )
+              )
+            ), 
+            
+            tabItem(tabName="dataBrowser",	titlePanel("Explore the web-based ThymoSight interface"),
               fluidPage(
                 tags$style('.container-fluid { background-color: #FFFFFF;}'),
                 tags$style("@import url(https://use.fontawesome.com/releases/v6.2.0/css/all.css);"),
                 tags$br(),
-                sidebarLayout(
-                  sidebarPanel(width = 4, h3("Datasets"),
-                    pickerInput("dataset", "Choose dataset(s)", choices = list.files("data/", pattern = '.h5ad')), 
-                    tags$hr(),
-                    h3("Graphs"),
-                    prettyRadioButtons(
-                      inputId = "annotation", label = "", choices = c( "metadata", "gene", "signature"),
-                      inline = TRUE, status = "danger", fill = TRUE),
-                    conditionalPanel(
-                      condition = "input.annotation == 'metadata'",
-                        selectizeInput('groupingInput', label = 'Choose annotation :', choices = NULL,
-                        multiple = F, options = list(create = TRUE))),
-                    conditionalPanel(
-                      condition = "input.annotation == 'gene'",
-                      selectizeInput('geneInput', label = 'Choose gene :', choices = NULL, 
-                      multiple = F, options = list(create = TRUE))),
-                    conditionalPanel(
-                      condition = "input.annotation == 'signature'",
-                      pickerInput(inputId = "signature", label = "Choose signature :", 
-                      choices = colnames(public_signatures),
-                      choicesOpt = list(subtext = paste(public_signatures_metadata$author, "", sep = "")))),
-                    tags$br(),
-                    actionBttn(inputId = "update_browser", label = "Launch", style = "pill", color = "danger"),
+                
+                tabsetPanel(
+                tabPanel("Mouse",tags$br(),
+              
+                fluidRow(
+                  column(12, pickerInput("dataset_mouse", "Choose dataset(s)", multiple=FALSE, selected = 'thymosight_cd45neg_TOTAL_mouse.h5ad', choices = list.files("data/mouse/", pattern = '.h5ad')))
                   ),
-                  mainPanel(width = 8,
-                    dropdownButton(
-                      radioGroupButtons(inputId = "cellSize", label = "Adjust cell size", selected = 1,
-                        choices = c(1,2,3,4,5), justified = TRUE),
-                        circle = TRUE, status = "danger", icon = icon("paint-roller"), width = "250px",
-                        tooltip = tooltipOptions(title = "Click to change size of points on graph")),           
-                  tags$br(),
-                  fluidRow(column(12,plotOutput("umap") %>% withSpinner(color="#FF465D")))),
-                  position='right'
+                fluidRow(
+                  column(3, h3('Available metadata'),
+                    radioButtons( inputId = 'annotation_mouse',
+                                  label = 'Annotate by:',
+                                  choices = colnames(thymosight_cd45neg_TOTAL_mouse$obs),
+                                  selected = 'tissue')),
+                  column(9, plotOutput("umap_mouse") %>% withSpinner(color="#FF465D"))
                 ),
-                fluidRow(column=12, DTOutput('tbl_br'))
+                  
+                fluidRow(
+                  column(3,
+                    tags$br(),
+                    tags$br(),
+                    h3("Check expression of your favourite genes"),
+                    selectizeInput('geneInput_mouse', 
+                                        label = 'Choose gene :', 
+                                        choices = NULL,
+                                        multiple = T, options = list(create = TRUE))),
+                  column(9, plotOutput("dotplot_mouse") %>% withSpinner(color="#FF465D"))
+                )
+              ),
+
+              tabPanel("Human",tags$br(),
+                fluidRow(
+                  column(12, pickerInput("dataset_human", "Choose dataset(s)", multiple=FALSE, selected = 'thymosight_cd45neg_TOTAL_human.h5ad', choices = list.files("data/human/", pattern = '.h5ad')))
+                ),
+                fluidRow(
+                  column(3, 
+                    h3('Available metadata'),
+                    radioButtons( inputId = 'annotation_human',
+                                  label = 'Annotate by:',
+                                  choices = colnames(thymosight_cd45neg_TOTAL_human$obs),
+                                  selected = 'tissue')),
+                  column(9, plotOutput("umap_human") %>% withSpinner(color="#FF465D"))
+                ),
+                fluidRow(
+                  column(3, 
+                    tags$br(),
+                    tags$br(),
+                    h3("Check expression of your favourite genes"),
+                    selectizeInput('geneInput_human', 
+                                        label = 'Choose gene :', 
+                                        choices = NULL,
+                                        multiple = T, options = list(create = TRUE))),
+                  column(9, plotOutput("dotplot_human") %>% withSpinner(color="#FF465D"))
+                )
+
               )
             )
           )
         )
       )
+    )
+  )
 
 # Shiny app: server component
 server <- function(input, output, session) {
   # options(shiny.maxRequestSize=30*1024^2)
-  adata_TOTAL_obs_tmp = adata_TOTAL_meta
+  sc <- import("scanpy")
   
-  output$tbl_db = renderDT(
-    tibble(adata_TOTAL_obs_tmp)[,c(11, 1:10)], filter='top', options = list(lengthChange = FALSE)
+  # read in MOUSE adata on the server side
+  thymosight_cd45neg_TOTAL_mouse = thymosight_cd45neg_TOTAL_mouse
+  thymosight_cd45neg_TOTAL_mouse_obs = thymosight_cd45neg_TOTAL_mouse$obs
+  updateSelectizeInput(session, 'geneInput_mouse', choices = rownames(thymosight_cd45neg_TOTAL_mouse$var), 
+                       selected = c('Epcam', 'Pdgfra', 'Pecam1', 'Nkain4', 'Acta2', 'S100b'), server = TRUE)
+  
+  # read in HUMAN adata on the server side
+  thymosight_cd45neg_TOTAL_human = thymosight_cd45neg_TOTAL_human
+  thymosight_cd45neg_TOTAL_human_obs = thymosight_cd45neg_TOTAL_human$obs
+  updateSelectizeInput(session, 'geneInput_human', choices = rownames(thymosight_cd45neg_TOTAL_human$var), 
+                       selected = c('EPCAM', 'PDGFRA', 'PECAM1', 'NKAIN4', 'ACTA2', 'S100B'), server = TRUE)
+  
+  
+  # reactive database table for MOUSE data (all+filtered)
+  output$tbl_db_mouse = renderDT(
+    tibble(thymosight_cd45neg_TOTAL_mouse_obs)[,c(1:10)], filter='top', options = list(lengthChange = FALSE)
   )
-  
-  tbl_db_filtered <- reactive({
-    req(input$tbl_db_rows_all)
-    tibble(adata_TOTAL_obs_tmp)[,c(11, 1:10)][input$tbl_db_rows_all, ]  
+  tbl_db_mouse_filtered <- reactive({
+    req(input$tbl_db_mouse_rows_all)
+    tibble(thymosight_cd45neg_TOTAL_mouse_obs)[,c(1:10)][input$tbl_db_mouse_rows_all, ]  
   })
-  output$nsubsetsBox <- renderValueBox({
+  
+  # reactive database table for HUMAN data
+  output$tbl_db_human = renderDT(
+    tibble(thymosight_cd45neg_TOTAL_human_obs)[,c(1:9)], filter='top', options = list(lengthChange = FALSE)
+  )
+  tbl_db_human_filtered <- reactive({
+    req(input$tbl_db_human_rows_all)
+    tibble(thymosight_cd45neg_TOTAL_human_obs)[,c(1:9)][input$tbl_db_human_rows_all, ]  
+  })
+  
+  # value boxes for MOUSE
+  output$`nsubsetsBox-mouse` <- renderValueBox({
     valueBox(
-      nrow(unique(tibble(tbl_db_filtered()$cell_type_subset))), "subsets",  
+      nrow(unique(tibble(tbl_db_mouse_filtered()$cell_type_subset))), "subsets",  
       icon = icon('shapes', class = NULL, lib = "font-awesome"), color = "light-blue")
   })
-  output$nagesBox <- renderValueBox({
+  output$`nagesBox-mouse` <- renderValueBox({
     valueBox(
-      nrow(unique(tibble(tbl_db_filtered()$age))), "ages", 
-      icon = icon('people-group', class = NULL, lib = "font-awesome"), color = "light-blue")
+      nrow(unique(tibble(tbl_db_mouse_filtered()$age_range))), "age-ranges", 
+      icon = icon('person-cane', class = NULL, lib = "font-awesome"), color = "light-blue")
   })
   
-  output$ngenotypeBox <- renderValueBox({
+  output$`ngenotypeBox-mouse` <- renderValueBox({
     valueBox(
-      nrow(unique(tibble(tbl_db_filtered()$genotype))), "genotypes", 
-      icon = icon('circle-radiation', class = NULL, lib = "font-awesome"), color = "light-blue")
+      nrow(unique(tibble(tbl_db_mouse_filtered()$genotype))), "genotypes", 
+      icon = icon('mouse', class = NULL, lib = "font-awesome"), color = "light-blue")
   })
   
-  output$nstrainBox <- renderValueBox({
+  output$`nsortedcellBox-mouse` <- renderValueBox({
     valueBox(
-      nrow(unique(tibble(tbl_db_filtered()$strain))), "strains", 
-      icon = icon('circle-radiation', class = NULL, lib = "font-awesome"), color = "light-blue")
+      nrow(unique(tibble(tbl_db_mouse_filtered()$sorted_cell))), "sorted-cells", 
+      icon = icon('filter', class = NULL, lib = "font-awesome"), color = "light-blue")
   })
   
-  output$ntreatmentBox <- renderValueBox({
+  output$`ntreatmentBox-mouse` <- renderValueBox({
     valueBox(
-      nrow(unique(tibble(tbl_db_filtered()$treatment))), "treatments", 
-      icon = icon('circle-radiation', class = NULL, lib = "font-awesome"), color = "light-blue")
+      nrow(unique(tibble(tbl_db_mouse_filtered()$treatment))), "treatments", 
+      icon = icon('radiation', class = NULL, lib = "font-awesome"), color = "light-blue")
   })
   
-  output$ncellsBox <- renderValueBox({
+  output$`ncellsBox-mouse` <- renderValueBox({
     valueBox(
-      nrow(tibble(tbl_db_filtered())), "cells", 
+      nrow(tibble(tbl_db_mouse_filtered())), "cells", 
       icon = icon('viruses', class = NULL, lib = "font-awesome"), color = "light-blue")
   })
   
-  output$barplot <- renderPlot({
-    summary <- tbl_db_filtered() %>% group_by(.data[[input$xaxis]], .data[[input$varColor]]) %>% summarise(n_cells = length(.data[[input$varColor]]))
-    ggplot(summary, aes(fill=.data[[input$varColor]], y=n_cells, x=.data[[input$xaxis]])) +
+  # value boxes for HUMAN
+  output$`nsubsetsBox-human` <- renderValueBox({
+    valueBox(
+      nrow(unique(tibble(tbl_db_human_filtered()$cell_type_subset))), "subsets",  
+      icon = icon('shapes', class = NULL, lib = "font-awesome"), color = "light-blue")
+  })
+  
+  output$`nagesBox-human` <- renderValueBox({
+    valueBox(
+      nrow(unique(tibble(tbl_db_human_filtered()$age_range))), "age-ranges", 
+      icon = icon('person-cane', class = NULL, lib = "font-awesome"), color = "light-blue")
+  })
+  
+  output$`ngenotypeBox-human` <- renderValueBox({
+    valueBox(
+      nrow(unique(tibble(tbl_db_human_filtered()$gender))), "gender", 
+      icon = icon('venus-mars', class = NULL, lib = "font-awesome"), color = "light-blue")
+  })
+  
+  output$`nsortedcellBox-human` <- renderValueBox({
+    valueBox(
+      nrow(unique(tibble(tbl_db_human_filtered()$sorted_cell))), "sorted-cells", 
+      icon = icon('filter', class = NULL, lib = "font-awesome"), color = "light-blue")
+  })
+  
+  output$`ntreatmentBox-human` <- renderValueBox({
+    valueBox(
+      nrow(unique(tibble(tbl_db_human_filtered()$treatment))), "treatments", 
+      icon = icon('radiation', class = NULL, lib = "font-awesome"), color = "light-blue")
+  })
+  
+  output$`ncellsBox-human` <- renderValueBox({
+    valueBox(
+      nrow(tibble(tbl_db_human_filtered())), "cells", 
+      icon = icon('viruses', class = NULL, lib = "font-awesome"), color = "light-blue")
+  })  
+  
+  # barplot with MOUSE metadata
+  output$`barplot-mouse` <- renderPlot({
+    summary <- tbl_db_mouse_filtered() %>% group_by(.data[[input$`barplot-x-mouse`]], .data[[input$`barplot-c-mouse`]]) %>% summarise(n_cells = length(.data[[input$`barplot-c-mouse`]]))
+    ggplot(summary, aes(fill=.data[[input$`barplot-c-mouse`]], y=n_cells, x=.data[[input$`barplot-x-mouse`]])) +
       geom_bar( colour='black', position="stack", stat="identity") + 
       scale_fill_manual(values = as.vector(polychrome(n=36))) +
       ylab("Number of cells\n") +  xlab("") + theme_pubr() +
@@ -222,55 +366,103 @@ server <- function(input, output, session) {
             legend.text = element_text(size = 15), axis.title = element_text(size = 19))
   })
   
+  # barplot with HUMAN metadata
+  output$`barplot-human` <- renderPlot({
+    summary <- tbl_db_human_filtered() %>% group_by(.data[[input$`barplot-x-human`]], .data[[input$`barplot-c-human`]]) %>% summarise(n_cells = length(.data[[input$`barplot-c-human`]]))
+    ggplot(summary, aes(fill=.data[[input$`barplot-c-human`]], y=n_cells, x=.data[[input$`barplot-x-human`]])) +
+      geom_bar( colour='black', position="stack", stat="identity") + 
+      scale_fill_manual(values = as.vector(polychrome(n=36))) +
+      ylab("Number of cells\n") +  xlab("") + theme_pubr() +
+      theme(axis.text.x = element_text(angle = 90, hjust=1, size = 15),
+            axis.text.y = element_text(size = 15), legend.title = element_text(size = 15),
+            legend.text = element_text(size = 15), axis.title = element_text(size = 19))
+  })
+
+  adata_mouse <- reactive({
+    anndata::read_h5ad(paste0('data/mouse/', input$dataset_mouse))
+    })
   
-  observeEvent(input$dataset,{
-    adata <- anndata::read_h5ad(paste0('data/', input$dataset))
-    output$tbl_br = renderDT(
-      tibble(adata$obs)[,c(1:10)], filter='top', options = list(lengthChange = FALSE)
-    )
+  observeEvent(input$annotation_mouse, { 
+   # gene = input$annotation
+    output$umap_mouse <- renderPlot({ 
+      
+    # annotation colors
+    if (input$annotation_mouse == 'cell_type_subset'){
+      palette = c('#f6222e', '#3283fe', 'beige', '#16ff32',  '#bdcdff', 'beige', '#aa0dfe', '#1cffce', 'grey', '#d62728',
+                  '#2ED9FF', '#c1c119', '#8b0000', '#3B00FC', '#FE00FA',  '#1CBE4F', '#F8A19F', '#B5EFB5','#9195F6',   '#325A9B',
+                  '#F9F07A', '#C075A6', '#7F27FF', '#FEAF16', 'black', '#BEFFF7', 'beige', '#FFA5D2', '#19c9b3', 'beige')}
+    else if (input$annotation_mouse == 'sorted_cell'){
+      palette = c('#16FF32', '#3283FE',  '#F6222E',  '#FEAF16', '#BDCDFF', '#3B00FB', '#1CFFCE', '#C075A6', '#F8A19F', '#B5EFB5',
+                  '#FBE426', '#C4451C', '#2ED9FF', '#c1c119', '#8b0000', '#FE00FA', '#1CBE4F', '#1C8356', '#0e452b', '#AA0DFE',
+                  '#B5EFB5', '#325A9B', '#90AD1C')}
+    else {
+      palette = user_defined_palette}
     
-    tbl_br_filtered <- reactive({
-      req(input$tbl_br_rows_all)
-      adata$obs[input$tbl_br_rows_all,]
+    # plot annotation umap
+    sc$pl$umap(adata_mouse(), color=input$annotation_mouse,
+               color_map='Spectral_r', 
+               use_raw=FALSE,
+               ncols=5,
+               wspace = 0.75,
+               outline_width=c(0.6, 0.05),
+               size=7,
+               palette=palette,
+               frameon=FALSE,
+               add_outline=TRUE,
+               sort_order = TRUE)
+  })
+      
+    
+    adata_human <- reactive({
+      anndata::read_h5ad(paste0('data/human/', input$dataset_human))
     })
     
-    updateSelectizeInput(session, 'groupingInput', choices = colnames(tbl_br_filtered()), server = TRUE)
-    updateSelectizeInput(session, 'geneInput', choices = rownames(adata$var), server = TRUE)
-    
-    observeEvent(input$update_browser,{
+    output$umap_human <- renderPlot({ 
       
-      if (input$annotation == 'metadata'){
-        output$umap <- renderPlot({
-          ggplot(as.data.frame(adata[rownames(tbl_br_filtered())]$obsm$X_umap), aes(x = adata[rownames(tbl_br_filtered())]$obsm$X_umap[,1], y = adata[rownames(tbl_br_filtered())]$obsm$X_umap[,2], colour = adata[rownames(tbl_br_filtered())]$obs[[input$groupingInput]])) +
-            geom_scattermore(pointsize = as.integer(input$cellSize)[[1]]) + theme_pubr() + xlab("UMAP1") + ylab("UMAP2") + theme(legend.position = "right", legend.title = element_text(size = 17), legend.text = element_text(size = 15)) +
-            scale_color_manual("", values = as.vector(polychrome(n=36)))
-        })
-      }
-      else if (input$annotation == 'gene'){
-        output$umap <- renderPlot({
-          if (is.null(input$geneInput)) return()
-          ggplot(as.data.frame(adata[rownames(tbl_br_filtered())]$obsm$X_umap), aes(x = adata[rownames(tbl_br_filtered())]$obsm$X_umap[,1], y = adata[rownames(tbl_br_filtered())]$obsm$X_umap[,2], colour = adata[rownames(tbl_br_filtered())]$X[, input$geneInput])) + 
-            geom_scattermore(pointsize = as.integer(input$cellSize)[[1]]) + theme_classic2() + scale_color_gradientn("", colours = rev(brewer.pal(11, "Spectral"))) + xlab("UMAP1") + ylab("UMAP2")
-        })
-      }
-      else if (input$annotation == 'signature'){
-        sc$tl$score_genes(adata, public_signatures[[input$signature]][!is.na(public_signatures[[input$signature]])], score_name=input$signature, use_raw=F)
-        output$umap <- renderPlot({
-          ggplot(as.data.frame(adata[rownames(tbl_br_filtered())]$obsm$X_umap), aes(x = adata[rownames(tbl_br_filtered())]$obsm$X_umap[,1], y = adata[rownames(tbl_br_filtered())]$obsm$X_umap[,2], colour = adata[rownames(tbl_br_filtered())]$obs[[input$signature]])) + 
-            geom_scattermore(pointsize = as.integer(input$cellSize)[[1]]) + theme_classic2() + scale_color_gradientn("", colours = rev(brewer.pal(11, "Spectral"))) + xlab("UMAP1") + ylab("UMAP2")
-        })
-      }
+      # annotation colors
+      if (input$annotation_human == 'cell_type_subset'){
+        palette = c('#f6222e', '#3283fe', 'beige', '#16ff32',  '#bdcdff', 'beige', '#aa0dfe', '#1cffce', 'grey', '#d62728',
+                    '#2ED9FF', '#c1c119', '#8b0000', '#3B00FC', '#FE00FA',  '#1CBE4F', '#F8A19F', '#B5EFB5','#9195F6',   '#325A9B',
+                    '#F9F07A', '#C075A6', '#7F27FF', '#FEAF16', 'black', '#BEFFF7', 'beige', '#FFA5D2', '#19c9b3', 'beige')}
+      else if (input$annotation_human == 'sorted_cell'){
+        palette = c('#16FF32', '#3283FE',  '#F6222E',  '#FEAF16', '#BDCDFF', '#3B00FB', '#1CFFCE', '#C075A6', '#F8A19F', '#B5EFB5',
+                    '#FBE426', '#C4451C', '#2ED9FF', '#c1c119', '#8b0000', '#FE00FA', '#1CBE4F', '#1C8356', '#0e452b', '#AA0DFE',
+                    '#B5EFB5', '#325A9B', '#90AD1C')}
+      else {
+        palette = user_defined_palette}
       
+      # plot annotation umap
+      sc$pl$umap(adata_human(), color=input$annotation_human,
+                       color_map='Spectral_r', 
+                       use_raw=FALSE,
+                       ncols=5,
+                       wspace = 0.75,
+                       outline_width=c(0.6, 0.05),
+                       size=7,
+                       palette=palette,
+                       frameon=FALSE,
+                       add_outline=TRUE,
+                       sort_order = TRUE)
     })
     
+    output$dotplot_mouse <- renderPlot({
+      sc$pl$dotplot(adata_mouse(), input$geneInput_mouse,
+                    groupby = input$annotation_mouse,
+                    cmap = 'Reds',
+                    swap_axes = TRUE,
+                    standard_scale='var')
+      # arrange(p, ncol=1, padding=units(5, "line"), top="", bottom="", right="", left="")
+    })
     
+    output$dotplot_human <- renderPlot({
+      sc$pl$dotplot(adata_human(), input$geneInput_human,
+                   groupby = input$annotation_human,
+                   cmap = 'Reds',
+                   swap_axes = TRUE,
+                   standard_scale='var')
+    })
     
   })
-  
-  
-  
-    
-    
 }
 
 options <- list()
