@@ -1,3 +1,6 @@
+dir.create("figures/umap", recursive = TRUE, showWarnings = FALSE)
+dir.create("figures/dotplot_", recursive = TRUE, showWarnings = FALSE)
+
 #renv::init()
 #renv::status()
 #renv::snapshot()
@@ -384,7 +387,7 @@ server <- function(input, output, session) {
   
   observeEvent(input$annotation_mouse, { 
    # gene = input$annotation
-    output$umap_mouse <- renderPlot({ 
+    output$umap_mouse <- renderImage({ 
       
     # annotation colors
     if (input$annotation_mouse == 'cell_type_subset'){
@@ -397,9 +400,10 @@ server <- function(input, output, session) {
                   '#B5EFB5', '#325A9B', '#90AD1C')}
     else {
       palette = user_defined_palette}
-    
+      imgfile_mouse <- tempfile(tmpdir="", pattern = "imgfile_mouse", fileext = ".png")
     # plot annotation umap
     sc$pl$umap(adata_mouse(), color=input$annotation_mouse,
+               save=imgfile_mouse,
                color_map='Spectral_r', 
                use_raw=FALSE,
                ncols=5,
@@ -410,15 +414,22 @@ server <- function(input, output, session) {
                frameon=FALSE,
                add_outline=TRUE,
                sort_order = TRUE)
-  })
+
+       list(src = paste0("figures/umap/", imgfile_mouse),
+         contentType = 'image/png',
+         alt = "This is a UMAP plot")
+
+
+  }, deleteFile = FALSE)
       
     
     adata_human <- reactive({
       anndata::read_h5ad(paste0('data/human/', input$dataset_human))
     })
     
-    output$umap_human <- renderPlot({ 
-      
+    output$umap_human <- renderImage({ 
+      imgfile_human <- tempfile(tmpdir="", fileext = ".png", pattern="imgfile_human")
+
       # annotation colors
       if (input$annotation_human == 'cell_type_subset'){
         palette = c('#f6222e', '#3283fe', 'beige', '#16ff32',  '#bdcdff', 'beige', '#aa0dfe', '#1cffce', 'grey', '#d62728',
@@ -433,6 +444,7 @@ server <- function(input, output, session) {
       
       # plot annotation umap
       sc$pl$umap(adata_human(), color=input$annotation_human,
+                       save=imgfile_human,
                        color_map='Spectral_r', 
                        use_raw=FALSE,
                        ncols=5,
@@ -443,24 +455,43 @@ server <- function(input, output, session) {
                        frameon=FALSE,
                        add_outline=TRUE,
                        sort_order = TRUE)
-    })
+       list(src = paste0("figures/umap/", imgfile_human),
+         contentType = 'image/png',
+         alt = "This is a UMAP plot")
+        
+    }, deleteFile = FALSE)
+
+    dotplotfile_mouse <- tempfile(tmpdir="", fileext = ".png", pattern = "dotplotfile_mouse")
     
-    output$dotplot_mouse <- renderPlot({
+    output$dotplot_mouse <- renderImage({
       sc$pl$dotplot(adata_mouse(), input$geneInput_mouse,
+                    save = dotplotfile_mouse,
                     groupby = input$annotation_mouse,
                     cmap = 'Reds',
                     swap_axes = TRUE,
                     standard_scale='var')
       # arrange(p, ncol=1, padding=units(5, "line"), top="", bottom="", right="", left="")
-    })
+    list(src = paste0("figures/dotplot_/", dotplotfile_mouse),
+      contentType = 'image/png',
+      alt = "This is a UMAP plot")
+
+
+    }, deleteFile = FALSE)
+
+    dotplotfile_human <- tempfile(tmpdir="", fileext = ".png", pattern = "dotplotfile_human")
     
-    output$dotplot_human <- renderPlot({
+    output$dotplot_human <- renderImage({
       sc$pl$dotplot(adata_human(), input$geneInput_human,
+                   save = dotplotfile_human,
                    groupby = input$annotation_human,
                    cmap = 'Reds',
                    swap_axes = TRUE,
                    standard_scale='var')
-    })
+       list(src = paste0("figures/dotplot_/", dotplotfile_human),
+         contentType = 'image/png',
+         alt = "This is a UMAP plot")
+
+    }, deleteFile = FALSE)
     
   })
 }
