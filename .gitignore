@@ -56,3 +56,5 @@ vignettes/*.pdf
 .Renviron
 
 *DS_Store
+figures/umap/
+figures/dotplot_/
