@@ -1,5 +1,14 @@
 # ThymoSight
 
+
+<style>
+  code {
+    white-space : pre-wrap !important;
+    word-break: break-word;
+  }
+</style>
+
+
 ThymoSight is an R Shiny app we have developed to allow interactive exploration of all mouse and human publicly available single cell datasets of the non-hematopoietic thymic stroma. ThymoSight provides dataset metadata fields (if available/applicable): tissue, age, stage, sorted cell population, gender, genotype, treatment, linked publication and mapped annotation based on our own subset signatures and original annotation. This repository includes both the app.R code that launches the app together with the Jupyter notebooks used to create consistent annotation fields, reanalyze and integrate the public datasets with ours. The server hosting the interactive app can be accessed at www.thymosight.org.
 
 ## ThymoSight input data
