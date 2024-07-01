@@ -7,25 +7,25 @@ ThymoSight is an R Shiny app we have developed to allow interactive exploration 
 The ThymoSight app input data have been created from publicly available datasets and our own submitted data. Accession numbers for all datasets used to create these input files are provided here.
 
 ### Public mouse data
-	•	Kernfeld et al. (2018)<sup>1</sup> [GSE107910]
-	•	Bornstein et al. (2018)<sup>1</sup> [GSE103967]
-	•	Dhalla et al. (2019)<sup>3</sup> [https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-8105#]
-	•	Baran-Gale et al. (2020)<sup>4</sup> [https://bioconductor.org/packages/release/data/experiment/html/MouseThymusAgeing.html]
-	•	Wells et al. (2020)<sup>5</sup> [GSE137699]
-	•	Rota et al. (2021)<sup>6</sup> [GSE162668]
-	•	Nusser et al. (2022)<sup>7</sup> [GSE106856]
-	•	Michelson et al. (2022)<sup>8</sup> [GSE194253]
-	•	Klein et al. (2023)<sup>9</sup> [GSE215418]
-	•	Farley et al. (2023)<sup>10</sup> [GSE232765]
-	•	Givony et al. (2023)<sup>11</sup> [GSE236075]
-	•	Michelson et al. (2023)<sup>12</sup> [GSE225661]
-	•	Horie et al. (2023)<sup>13</sup> [GSE228198]
-	•	Kousa et al. (2024) [GSE240020]
+- Kernfeld et al. (2018)<sup>1</sup> [GSE107910]
+- Bornstein et al. (2018)<sup>1</sup> [GSE103967]
+- Dhalla et al. (2019)<sup>3</sup> [https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-8105#]
+- Baran-Gale et al. (2020)<sup>4</sup> [https://bioconductor.org/packages/release/data/experiment/html/MouseThymusAgeing.html]
+- Wells et al. (2020)<sup>5</sup> [GSE137699]
+- Rota et al. (2021)<sup>6</sup> [GSE162668]
+- Nusser et al. (2022)<sup>7</sup> [GSE106856]
+- Michelson et al. (2022)<sup>8</sup> [GSE194253]
+- Klein et al. (2023)<sup>9</sup> [GSE215418]
+- Farley et al. (2023)<sup>10</sup> [GSE232765]
+- Givony et al. (2023)<sup>11</sup> [GSE236075]
+- Michelson et al. (2023)<sup>12</sup> [GSE225661]
+- Horie et al. (2023)<sup>13</sup> [GSE228198]
+- Kousa et al. (2024) [GSE240020]
 
 ### Public human data
-	•	Park et al. (2020)<sup>14</sup> [https://zenodo.org/records/3711134]
-	•	Bautista et al. (2021)<sup>15</sup> [GSE147520]
-	•	Ragazzini et al. (2023)<sup>16</sup> [GSE220830, GSE220206, GSE220829]
+- Park et al. (2020)<sup>14</sup> [https://zenodo.org/records/3711134]
+- Bautista et al. (2021)<sup>15</sup> [GSE147520]
+- Ragazzini et al. (2023)<sup>16</sup> [GSE220830, GSE220206, GSE220829]
  
 The re-analyzed public datasets with added metadata that are used as input for this app can be accessed at [10.5281/zenodo.12516405](https://zenodo.org/records/12516405).
 
