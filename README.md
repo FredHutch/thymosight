@@ -27,9 +27,9 @@ The ThymoSight app input data have been created from publicly available datasets
 - Bautista et al. (2021)<sup>15</sup> [GSE147520]
 - Ragazzini et al. (2023)<sup>16</sup> [GSE220830, GSE220206, GSE220829]  
 
-<code>
+```
 The re-analyzed public datasets with added metadata that are used as input for this app can be accessed at [10.5281/zenodo.12516405](https://zenodo.org/records/12516405).
-</code>
+```
 
 ## Citations
 <sup>1</sup>Kernfeld, E. M. et al. A Single-Cell Transcriptomic Atlas of Thymus Organogenesis Resolves Cell Types and Developmental Maturation. Immunity (2018). https://doi.org/10.1016/j.immuni.2018.04.015  
