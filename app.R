@@ -42,6 +42,7 @@ if (Sys.info()["sysname"] == "Linux" && !interactive()) {
 
 }
 sc <- import("scanpy")
+plt <- import("matplotlib.pyplot")
 
 setAs("dgRMatrix", to = "dgCMatrix", function(from){
   as(as(from, "CsparseMatrix"), "dgCMatrix")
@@ -414,7 +415,8 @@ server <- function(input, output, session) {
                frameon=FALSE,
                add_outline=TRUE,
                sort_order = TRUE)
-
+       plt$tight_layout()
+      #  plt$show(fig)
        list(src = paste0("figures/umap/", imgfile_mouse),
          contentType = 'image/png',
          alt = "This is a UMAP plot")
@@ -455,6 +457,8 @@ server <- function(input, output, session) {
                        frameon=FALSE,
                        add_outline=TRUE,
                        sort_order = TRUE)
+       plt$tight_layout()
+      #  plt$show(fig)
        list(src = paste0("figures/umap/", imgfile_human),
          contentType = 'image/png',
          alt = "This is a UMAP plot")
