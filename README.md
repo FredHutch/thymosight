@@ -28,7 +28,8 @@ The ThymoSight app input data have been created from publicly available datasets
 - Ragazzini et al. (2023)<sup>16</sup> [GSE220830, GSE220206, GSE220829]  
 
 ```
-The re-analyzed public datasets with added metadata that are used as input for this app can be accessed at [10.5281/zenodo.12516405](https://zenodo.org/records/12516405).
+The re-analyzed public datasets with added metadata that are used as input for this app can be accessed at:
+[10.5281/zenodo.12516405](https://zenodo.org/records/12516405).
 ```
 
 ## Citations
