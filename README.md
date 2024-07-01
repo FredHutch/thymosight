@@ -2,6 +2,13 @@
 
 ThymoSight is an R Shiny app we have developed to allow interactive exploration of all mouse and human publicly available single cell datasets of the non-hematopoietic thymic stroma. ThymoSight provides dataset metadata fields (if available/applicable): tissue, age, stage, sorted cell population, gender, genotype, treatment, linked publication and mapped annotation based on our own subset signatures and original annotation. This repository includes both the app.R code that launches the app together with the Jupyter notebooks used to create consistent annotation fields, reanalyze and integrate the public datasets with ours. The server hosting the interactive app can be accessed at www.thymosight.org.
 
+
+<br>
+
+> The re-analyzed public datasets with added metadata that are used as input for this app can be accessed at [10.5281/zenodo.12516405](https://zenodo.org/records/12516405).
+<br>
+
+
 ## ThymoSight input data
 
 The ThymoSight app input data have been created from publicly available datasets and our own submitted data. Accession numbers for all datasets used to create these input files are provided here.
@@ -27,10 +34,6 @@ The ThymoSight app input data have been created from publicly available datasets
 - Bautista et al. (2021)<sup>15</sup> [GSE147520]
 - Ragazzini et al. (2023)<sup>16</sup> [GSE220830, GSE220206, GSE220829]  
 
-<br>
-
-> The re-analyzed public datasets with added metadata that are used as input for this app can be accessed at [10.5281/zenodo.12516405](https://zenodo.org/records/12516405).
-<br>
 
 ## Citations
 <sup>1</sup>Kernfeld, E. M. et al. A Single-Cell Transcriptomic Atlas of Thymus Organogenesis Resolves Cell Types and Developmental Maturation. Immunity (2018). https://doi.org/10.1016/j.immuni.2018.04.015  
