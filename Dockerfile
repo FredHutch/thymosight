@@ -52,9 +52,9 @@ RUN R --vanilla -e "install.packages('systemfonts', repos='https://p3m.dev/cran/
 
 RUN R --vanilla -e "install.packages('Matrix', repos='https://p3m.dev/cran/__linux__/jammy/latest/')"
 
-RUN R --vanilla -e "install.packages(c('renv', 'ggpubr', 'arrow'), repos='https://p3m.dev/cran/__linux__/jammy/latest/')"
+RUN R --vanilla -e "install.packages(c('renv', 'ggpubr', 'arrow', 'readxl', 'feather', 'anndata', 'dichromat', 'dplyr', 'scattermore', 'DT', 'ggplot', 'shiny', 'shinycssloaders', 'shinydashboard', 'shinyWidgets', 'reticulate', 'tibble', 'viridis', 'hrbrthemes', 'sccore', 'RColorBrewer', 'pals'), repos='https://p3m.dev/cran/__linux__/jammy/latest/')"
 
-RUN R --vanilla -e "renv::install('readxl@1.4.0', 'feather@0.3.5', 'anndata@0.7.5.3', 'dichromat@2.0-0.1', 'dplyr@1.0.10', 'scattermore@0.8', 'DT@0.26', 'ggplot2@3.4.0', 'shiny@1.7.3', 'shinycssloaders@1.0.0', 'shinydashboard@0.7.2', 'shinyWidgets@0.7.4', 'reticulate@1.26', 'tibble@3.1.8', 'viridis@0.6.2', 'hrbrthemes@0.8.0', 'sccore@1.0.2', 'RColorBrewer@1.1-3', 'pals@1.7', library=.libPaths())"
+# RUN R --vanilla -e "renv::install('readxl@1.4.0', 'feather@0.3.5', 'anndata@0.7.5.3', 'dichromat@2.0-0.1', 'dplyr@1.0.10', 'scattermore@0.8', 'DT@0.26', 'ggplot2@3.4.0', 'shiny@1.7.3', 'shinycssloaders@1.0.0', 'shinydashboard@0.7.2', 'shinyWidgets@0.7.4', 'reticulate@1.26', 'tibble@3.1.8', 'viridis@0.6.2', 'hrbrthemes@0.8.0', 'sccore@1.0.2', 'RColorBrewer@1.1-3', 'pals@1.7', library=.libPaths())"
 
 # make sure all packages are installed
 # because R does not fail when there's an error installing a package.
