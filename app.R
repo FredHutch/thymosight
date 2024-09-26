@@ -407,9 +407,8 @@ server <- function(input, output, session) {
                save=imgfile_mouse,
                color_map='Spectral_r', 
                use_raw=FALSE,
-              #  ncols=5,
-               wspace = 1.5,
-               hspace = 0.5,
+               ncols=5,
+               wspace = 0.75,
                outline_width=c(0.6, 0.05),
                size=7,
                palette=palette,
@@ -417,7 +416,7 @@ server <- function(input, output, session) {
                add_outline=TRUE,
                sort_order = TRUE)
        plt$tight_layout()
-       plt$show(fig)
+      #  plt$show(fig)
        list(src = paste0("figures/umap/", imgfile_mouse),
          contentType = 'image/png',
          alt = "This is a UMAP plot")
@@ -450,9 +449,8 @@ server <- function(input, output, session) {
                        save=imgfile_human,
                        color_map='Spectral_r', 
                        use_raw=FALSE,
-                      #  ncols=5,
-                       wspace = 1.5,
-                       hspace = 0.5,
+                       ncols=5,
+                       wspace = 0.75,
                        outline_width=c(0.6, 0.05),
                        size=7,
                        palette=palette,
@@ -460,7 +458,7 @@ server <- function(input, output, session) {
                        add_outline=TRUE,
                        sort_order = TRUE)
        plt$tight_layout()
-       plt$show(fig)
+      #  plt$show(fig)
        list(src = paste0("figures/umap/", imgfile_human),
          contentType = 'image/png',
          alt = "This is a UMAP plot")
