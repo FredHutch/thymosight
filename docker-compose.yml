@@ -12,8 +12,11 @@ services:
         - "traefik.http.routers.thymosight.rule=Host(`thymosight.fredhutch.org`)"
         - "traefik.http.routers.thymosight-secured.rule=Host(`thymosight.fredhutch.org`)"
         - "traefik.http.routers.thymosight.entrypoints=web,web-secured"
-        - "traefik.http.services.thymosight.loadbalancer.server.port=3838" # it seems you always need to give traefik a port so it 'notices' the service
+        - "traefik.http.services.thymosight.loadbalancer.server.port=3838"
         - "traefik.http.routers.thymosight.tls=true"
+        - "org.fredhutch.app.owner=akousa@coh.org,kcooper2@fredhutch.org,jdudakov@fredhutch.org"
+        - "org.fredhutch.github.repo=thymosight"
+
 
 networks:
   proxy:
